@@ -1,7 +1,8 @@
-import * as React from 'react';
+import * as React from "react";
 import * as ReactDOM from "react-dom";
-import HelloWorld from './HelloWorld';
+import { App } from "./App";
 
-ReactDOM.render(<React.StrictMode>
-    <HelloWorld />
-  </React.StrictMode>, document.getElementById('root'));
+ReactDOM.render(
+  <App userName="Muhammad" lang="TypeScript" />,
+  document.getElementById("output")
+);
