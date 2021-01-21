@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import * as data from './../data/user.json';
+import * as data from '../data/user.json';
 
 import { Container, Grid, FormControl, Select, MenuItem, InputLabel } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -30,7 +30,6 @@ export const UserCombo = () => {
                     <Select
                         value={state.selectedUser}
                         variant="outlined"
-                        name="s"
                       onChange={(e: React.ChangeEvent<{ value: string }>) => {
                          dispatch({
                              type: 'SET',

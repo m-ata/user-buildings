@@ -1,8 +1,9 @@
 import * as React from "react";
-import { UserCombo } from './components/Users';
+import { UserCombo } from './components/UserCombo';
 import mainReducer from './state/reducer';
 import { initialState } from './state/constants';
 import { AppContext } from './state/context'
+import {Index} from './components/buildings';
 
 export const App = () => {
 
@@ -15,6 +16,7 @@ export const App = () => {
         dispatch
       }}>
         <UserCombo />
+        <Index />
     </AppContext.Provider>
   )
 };
