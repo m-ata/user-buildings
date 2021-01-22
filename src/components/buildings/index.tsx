@@ -9,10 +9,13 @@ import { AppContext } from '../../state/context';
 
 const useStyles = makeStyles(() => ({
     container: {
-        height: 400,
-        border: 2,
-        borderColor: 'gray',
-        borderRadius: 5
+        height: 420,
+        border: '2px solid #3f51b5',
+        borderRadius: 5,
+    },
+    listRoot: {
+        height: 355,
+        overflow: 'auto'
     },
     list: {
         cursor: "pointer",
@@ -20,8 +23,25 @@ const useStyles = makeStyles(() => ({
             display: "none"
         },
         "&:hover .hiddenButton": {
-            display: "inline"
-        }
+            display: "inline",
+        },
+        "&:hover ": {
+            backgroundColor: 'gray'
+        },
+        marginTop: 8,
+        backgroundColor: 'silver',
+        height: 25,
+        display: 'flex',
+        alignItems: 'center',
+    },
+    button: {
+        width: '100%'
+    },
+    apBar: {
+        height: 30,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 }));
 
@@ -50,37 +70,45 @@ export const Index = () => {
             <Grid container justify="flex-start" spacing={3} >
                 <Grid item xs={4}>
                     <Typography component="div" className={classes.container} >
-                        <AppBar color="primary" position="static">
+                        <AppBar color="primary" position="static" className={classes.apBar}>
                             Building List
                         </AppBar>
-                        {
-                            state?.buildings?.length > 0 && state.buildings.map((building, index) => {
-                                return (
-                                    building.userId === state.selectedUser &&
-                                    <Typography component="div" key={index} className={classes.list}>
-                                        { building.name}
-                                        <IconButton
-                                            aria-label="delete building"
-                                            color="primary"
-                                            onClick={() => handleDelete(building.id)}
-                                        >
-                                            <DeleteIcon className={'hiddenButton'} color={'primary'} />
-                                        </IconButton>
-                                        <IconButton
-                                            aria-label="delete building"
-                                            color="primary"
-                                            onClick={() => setBuildingState((prevState) => ({ ...prevState, formType: 'edit', formView: true, selectedBuilding: building }))}
-                                        >
-                                            <EditIcon className={'hiddenButton'} color={'primary'} />
-                                        </IconButton>
-                                    </Typography>
-                                )
-                            })
-                        }
-                        <Button color="primary" variant="contained"
+                        <Typography component="div" className={classes.listRoot} >
+                            {
+                                state?.buildings?.length > 0 && state.buildings.map((building, index) => {
+                                    return (
+                                        building.userId === state.selectedUser &&
+                                        <Typography component="div" key={index} className={classes.list}>
+                                            <Grid container>
+                                                <Grid item xs={10}>
+                                                    <Typography component='span' style={{ marginLeft: 8 }} > {building.name} </Typography>
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <DeleteIcon
+                                                        className={'hiddenButton'}
+                                                        onClick={() => handleDelete(building.id)}
+                                                        color={'primary'}
+                                                    />
+                                                    <EditIcon
+                                                        onClick={() => setBuildingState((prevState) => ({ ...prevState, formType: 'edit', formView: true, selectedBuilding: building }))}
+                                                        className={'hiddenButton'}
+                                                        color={'primary'} />
+                                                </Grid>
+                                            </Grid>
+                                        </Typography>
+                                    )
+                                })
+                            }
+                        </Typography>
+                        <Button
+                            color="primary"
+                            variant="contained"
                             onClick={() => {
                                 setBuildingState((prevState) => ({ ...prevState, formType: 'add', formView: true }))
-                            }} disabled={!state.selectedUser} >
+                            }}
+                            disabled={!state.selectedUser}
+                            className={classes.button}
+                        >
                             Add Building
                         </Button>
                     </Typography>
