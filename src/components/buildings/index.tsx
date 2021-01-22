@@ -1,9 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Container, Grid, Typography, AppBar, Button, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core/styles';
 import AddBuilding from './AddBuilding';
 import { AppContext } from '../../state/context';
+
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -29,8 +31,9 @@ export const Index = () => {
     const [buildingState, setBuildingState] = useState({
         formView: false,
         formType: '',
+        selectedBuilding: null
     });
-    const { formType, formView } = buildingState
+    const { formType, formView, selectedBuilding } = buildingState
     const { state, dispatch } = useContext(AppContext);
 
     const handleDelete = (id: number) => {
@@ -63,6 +66,13 @@ export const Index = () => {
                                         >
                                             <DeleteIcon className={'hiddenButton'} color={'primary'} />
                                         </IconButton>
+                                        <IconButton
+                                            aria-label="delete building"
+                                            color="primary"
+                                            onClick={() => setBuildingState((prevState) => ({ ...prevState, formType: 'edit', formView: true, selectedBuilding: building }))}
+                                        >
+                                            <EditIcon className={'hiddenButton'} color={'primary'} />
+                                        </IconButton>
                                     </Typography>
                                 )
                             })
@@ -81,9 +91,14 @@ export const Index = () => {
                             {
                                 formType === 'add' && <span> ADD </span>
                             }
+                            {
+                                formType === 'edit' && <span> EDIT </span>
+                            }
                         </AppBar>
                         {
-                            formType === 'add' && <AddBuilding />
+                            formView ? <AddBuilding formType={formType} formData={selectedBuilding} /> : <Typography>
+                                Map View
+                            </Typography>
                         }
                     </Typography>
                 </Grid>

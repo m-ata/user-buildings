@@ -1,35 +1,57 @@
 import React, { useEffect, useState, useContext } from 'react';
 import {
-    Container, Button, FormGroup,
+    Container, Button,
     FormControl, FormLabel, TextField, Select, MenuItem, InputLabel, Grid
 } from '@material-ui/core';
 import * as data from './../../data/countriesList.json';
 import { AppContext } from '../../state/context';
+import { Building } from '../../models';
+import { Types } from '../../state/constants';
 
-const AddBuilding = () => {
+interface BuildingProps {
+    formType: string,
+    formData?: Building,
 
+}
+
+const AddBuilding: React.FC<BuildingProps> = (props) => {
+    
     const [addBuildingState, setAddBuildingState] = useState({
         locations: [],
-        locationId: '',
-        buildingName: '',
+        locationId: props?.formData?.locationId || '',
+        buildingName: props?.formData?.name || '',
     });
     const { locationId, locations, buildingName } = addBuildingState;
     const { state, dispatch } = useContext(AppContext);
 
     useEffect(() => {
-        data && data.locations && setAddBuildingState((prevState) => ({ ...prevState, locations: data.locations }))
+        data?.locations && setAddBuildingState((prevState) => ({ ...prevState, locations: data.locations }))
     }, []);
 
+    useEffect(() => {
+        props?.formType === 'edit' && setAddBuildingState((prevState) => ({ ...prevState, buildingName: props?.formData?.name, locationId: props?.formData?.locationId }));
+    }, [props?.formType]);
+
     const handleSubmit = () => {
+        props?.formType === 'add' ?
         dispatch({
-            type: 'CREATE',
+            type: Types.CREATE,
             payload: {
-                id: `building-${state.buildings.length + 1}`,
+                id: `building-${state.buildings.filter(x => x.userId === state.selectedUser).length + 1}`,
+                name: buildingName,
+                userId: state.selectedUser,
+                locationId: locationId
+            }
+        }) : dispatch({
+            type: Types.EDIT,
+            payload: {
+                id: props?.formData?.id,
                 name: buildingName,
                 userId: state.selectedUser,
                 locationId: locationId
             }
         })
+        setAddBuildingState((prevState) => ({ ...prevState, buildingName: '', locationId: '' }))
     }
 
     return (
@@ -57,7 +79,7 @@ const AddBuilding = () => {
                         <FormLabel component="legend"> Location </FormLabel>
                     </FormControl>
                 </Grid>
-                <Grid xs={8}>
+                <Grid item xs={8}>
                     <FormControl>
                         <InputLabel htmlFor="grouped-native-select">Select Location</InputLabel>
                         <Select
