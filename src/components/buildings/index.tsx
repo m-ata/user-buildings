@@ -49,11 +49,11 @@ export const Index = () => {
 
     const classes = useStyles();
     const [buildingState, setBuildingState] = useState({
-        formView: false,
+        viewType: '',
         formType: '',
         selectedBuilding: null
     });
-    const { formType, formView, selectedBuilding } = buildingState
+    const { formType, viewType, selectedBuilding } = buildingState
     const { state, dispatch } = useContext(AppContext);
 
     const handleDelete = (id: number) => {
@@ -63,6 +63,10 @@ export const Index = () => {
                 id: id
             }
         })
+    }
+
+    const handleReset = () => {
+        setBuildingState((prevState) => ({ ...prevState, formType: '', viewType: '' }))
     }
 
     return (
@@ -90,7 +94,7 @@ export const Index = () => {
                                                         color={'primary'}
                                                     />
                                                     <EditIcon
-                                                        onClick={() => setBuildingState((prevState) => ({ ...prevState, formType: 'edit', formView: true, selectedBuilding: building }))}
+                                                        onClick={() => setBuildingState((prevState) => ({ ...prevState, formType: 'edit', viewType: 'form', selectedBuilding: building }))}
                                                         className={'hiddenButton'}
                                                         color={'primary'} />
                                                 </Grid>
@@ -104,7 +108,7 @@ export const Index = () => {
                             color="primary"
                             variant="contained"
                             onClick={() => {
-                                setBuildingState((prevState) => ({ ...prevState, formType: 'add', formView: true }))
+                                setBuildingState((prevState) => ({ ...prevState, formType: 'add', viewType: 'form' }))
                             }}
                             disabled={!state.selectedUser}
                             className={classes.button}
@@ -124,9 +128,7 @@ export const Index = () => {
                             }
                         </AppBar>
                         {
-                            formView ? <AddBuilding formType={formType} formData={selectedBuilding} /> : <Typography>
-                                Map View
-                            </Typography>
+                            viewType === 'form' && <AddBuilding formType={formType} formData={selectedBuilding} clickHandler={handleReset} />
                         }
                     </Typography>
                 </Grid>

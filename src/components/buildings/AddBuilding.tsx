@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 interface BuildingProps {
     formType: string,
     formData?: Building,
-
+    clickHandler: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 const AddBuilding: React.FC<BuildingProps> = (props) => {
@@ -64,7 +64,8 @@ const AddBuilding: React.FC<BuildingProps> = (props) => {
                     locationId: locationId
                 }
             })
-        setAddBuildingState((prevState) => ({ ...prevState, buildingName: '', locationId: '' }))
+        setAddBuildingState((prevState) => ({ ...prevState, buildingName: '', locationId: '' }));
+        props?.clickHandler;
     }
 
     return (
@@ -116,7 +117,11 @@ const AddBuilding: React.FC<BuildingProps> = (props) => {
             </Grid>
             <Grid container justify="flex-end" className={classes.buttonRow} >
                 <Grid item>
-                    <Button variant="outlined" style={{marginRight: 8}} >
+                    <Button 
+                        variant="outlined" 
+                        style={{marginRight: 8}}
+                        onClick={props?.clickHandler}
+                    >
                         CANCEL
                     </Button>
                     <Button 
