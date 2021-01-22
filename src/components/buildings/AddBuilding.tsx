@@ -7,6 +7,18 @@ import * as data from './../../data/countriesList.json';
 import { AppContext } from '../../state/context';
 import { Building } from '../../models';
 import { Types } from '../../state/constants';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    row: {
+        marginTop: theme.spacing(1)
+    },
+    buttonRow: {
+        position: 'absolute', 
+        bottom: 40, 
+        right: 8
+    }
+}));
 
 interface BuildingProps {
     formType: string,
@@ -15,14 +27,15 @@ interface BuildingProps {
 }
 
 const AddBuilding: React.FC<BuildingProps> = (props) => {
-    
+
     const [addBuildingState, setAddBuildingState] = useState({
         locations: [],
-        locationId: props?.formData?.locationId || '',
-        buildingName: props?.formData?.name || '',
+        locationId: '',
+        buildingName: '',
     });
     const { locationId, locations, buildingName } = addBuildingState;
     const { state, dispatch } = useContext(AppContext);
+    const classes = useStyles();
 
     useEffect(() => {
         data?.locations && setAddBuildingState((prevState) => ({ ...prevState, locations: data.locations }))
@@ -34,53 +47,56 @@ const AddBuilding: React.FC<BuildingProps> = (props) => {
 
     const handleSubmit = () => {
         props?.formType === 'add' ?
-        dispatch({
-            type: Types.CREATE,
-            payload: {
-                id: `building-${state.buildings.filter(x => x.userId === state.selectedUser).length + 1}`,
-                name: buildingName,
-                userId: state.selectedUser,
-                locationId: locationId
-            }
-        }) : dispatch({
-            type: Types.EDIT,
-            payload: {
-                id: props?.formData?.id,
-                name: buildingName,
-                userId: state.selectedUser,
-                locationId: locationId
-            }
-        })
+            dispatch({
+                type: Types.CREATE,
+                payload: {
+                    id: `building-${state.buildings.filter(x => x.userId === state.selectedUser).length + 1}`,
+                    name: buildingName,
+                    userId: state.selectedUser,
+                    locationId: locationId
+                }
+            }) : dispatch({
+                type: Types.EDIT,
+                payload: {
+                    id: props?.formData?.id,
+                    name: buildingName,
+                    userId: state.selectedUser,
+                    locationId: locationId
+                }
+            })
         setAddBuildingState((prevState) => ({ ...prevState, buildingName: '', locationId: '' }))
     }
 
     return (
-        <Container>
-            <Grid container>
-                <Grid item xs={4}>
+        <Container style={{position: 'relative', height: '100%'}}>
+            <Grid container className={classes.row}>
+                <Grid item xs={3}>
                     <FormControl>
                         <FormLabel component="legend"> Name </FormLabel>
 
                     </FormControl>
                 </Grid>
-                <Grid item xs={8}>
-                    <FormControl>
-                        <TextField variant="outlined" value={buildingName}
+                <Grid item xs={5}>
+                    <FormControl fullWidth>
+                        <TextField 
+                            variant="outlined" 
+                            value={buildingName}
                             onChange={(e: React.ChangeEvent<{ value: string }>) => {
                                 e.persist();
                                 setAddBuildingState((prevState) => ({ ...prevState, buildingName: e.target.value }))
-                            }} />
+                            }} 
+                            />
                     </FormControl>
                 </Grid>
             </Grid>
-            <Grid container>
-                <Grid item xs={4}>
+            <Grid container className={classes.row}>
+                <Grid item xs={3}>
                     <FormControl>
                         <FormLabel component="legend"> Location </FormLabel>
                     </FormControl>
                 </Grid>
-                <Grid item xs={8}>
-                    <FormControl>
+                <Grid item xs={5}>
+                    <FormControl fullWidth>
                         <InputLabel htmlFor="grouped-native-select">Select Location</InputLabel>
                         <Select
                             value={locationId}
@@ -98,7 +114,23 @@ const AddBuilding: React.FC<BuildingProps> = (props) => {
                     </FormControl>
                 </Grid>
             </Grid>
-            <Button variant="outlined" onClick={handleSubmit} > CREATE </Button>
+            <Grid container justify="flex-end" className={classes.buttonRow} >
+                <Grid item>
+                    <Button variant="outlined" style={{marginRight: 8}} >
+                        CANCEL
+                    </Button>
+                    <Button 
+                        variant="contained"
+                        onClick={handleSubmit} 
+                        disabled={!(locationId && buildingName)}
+                        color="primary" 
+                    >
+                        {
+                            props.formType === 'add' ? 'CREATE' : 'EDIT'
+                        }
+                    </Button>
+                </Grid>
+            </Grid>
         </Container>
     )
 }
