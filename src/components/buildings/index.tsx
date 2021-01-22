@@ -33,10 +33,6 @@ export const Index = () => {
     const { formType, formView } = buildingState
     const { state, dispatch } = useContext(AppContext);
 
-    useEffect(() => {
-        console.log(state.buildings);
-    }, [state.buildings]);
-
     const handleDelete = (id: number) => {
         dispatch({
             type: 'DELETE',
@@ -55,8 +51,9 @@ export const Index = () => {
                             Building List
                         </AppBar>
                         {
-                            state.buildings.length > 0 && state.buildings.map((building, index) => {
+                            state?.buildings?.length > 0 && state.buildings.map((building, index) => {
                                 return (
+                                    building.userId === state.selectedUser &&
                                     <Typography component="div" key={index} className={classes.list}>
                                         { building.name}
                                         <IconButton
@@ -73,7 +70,7 @@ export const Index = () => {
                         <Button color="primary" variant="contained"
                             onClick={() => {
                                 setBuildingState((prevState) => ({ ...prevState, formType: 'add', formView: true }))
-                            }} >
+                            }} disabled={!state.selectedUser} >
                             Add Building
                         </Button>
                     </Typography>

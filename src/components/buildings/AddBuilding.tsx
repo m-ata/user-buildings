@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import {
-    Container, Grid, Typography, Button, FormGroup,
-    FormControl, FormLabel, TextField, Select, MenuItem, InputLabel
+    Container, Button, FormGroup,
+    FormControl, FormLabel, TextField, Select, MenuItem, InputLabel, Grid
 } from '@material-ui/core';
 import * as data from './../../data/countriesList.json';
 import { AppContext } from '../../state/context';
@@ -34,33 +34,48 @@ const AddBuilding = () => {
 
     return (
         <Container>
-            <FormGroup>
-                <FormControl>
-                    <FormLabel component="legend"> Name </FormLabel>
-                    <TextField variant="outlined" value={buildingName} 
-                        onChange={(e: React.ChangeEvent<{ value: string }>) => {
-                            e.persist();
-                            setAddBuildingState((prevState) => ({ ...prevState, buildingName: e.target.value }))
-                        }} />
-                </FormControl>
-                <FormControl>
-                    <FormLabel component="legend"> Location </FormLabel>
-                    <InputLabel htmlFor="grouped-native-select">Select Location</InputLabel>
-                    <Select
-                        value={locationId}
-                        variant="outlined"
-                        onChange={(e: React.ChangeEvent<{ value: string }>) => {
-                            setAddBuildingState((prevState) => ({ ...prevState, locationId: e.target.value }))
-                        }}
-                    >
-                        {
-                            locations.length && locations.map(loc => {
-                                return <MenuItem key={loc.id} value={loc.id}> {loc.name} </MenuItem>
-                            })
-                        }
-                    </Select>
-                </FormControl>
-            </FormGroup>
+            <Grid container>
+                <Grid item xs={4}>
+                    <FormControl>
+                        <FormLabel component="legend"> Name </FormLabel>
+
+                    </FormControl>
+                </Grid>
+                <Grid item xs={8}>
+                    <FormControl>
+                        <TextField variant="outlined" value={buildingName}
+                            onChange={(e: React.ChangeEvent<{ value: string }>) => {
+                                e.persist();
+                                setAddBuildingState((prevState) => ({ ...prevState, buildingName: e.target.value }))
+                            }} />
+                    </FormControl>
+                </Grid>
+            </Grid>
+            <Grid container>
+                <Grid item xs={4}>
+                    <FormControl>
+                        <FormLabel component="legend"> Location </FormLabel>
+                    </FormControl>
+                </Grid>
+                <Grid xs={8}>
+                    <FormControl>
+                        <InputLabel htmlFor="grouped-native-select">Select Location</InputLabel>
+                        <Select
+                            value={locationId}
+                            variant="outlined"
+                            onChange={(e: React.ChangeEvent<{ value: string }>) => {
+                                setAddBuildingState((prevState) => ({ ...prevState, locationId: e.target.value }))
+                            }}
+                        >
+                            {
+                                locations.length && locations.map(loc => {
+                                    return <MenuItem key={loc.id} value={loc.id}> {loc.name} </MenuItem>
+                                })
+                            }
+                        </Select>
+                    </FormControl>
+                </Grid>
+            </Grid>
             <Button variant="outlined" onClick={handleSubmit} > CREATE </Button>
         </Container>
     )
